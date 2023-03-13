@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     DANHMUCSANPHAM.init({
         IDDM: {
             type: DataTypes.INTEGER,
+            autoIncrement: true,
             primaryKey: true,
         },
         TENDANHMUC: DataTypes.STRING(50),
