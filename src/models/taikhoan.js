@@ -27,9 +27,7 @@ module.exports = (sequelize, DataTypes) => {
         DIACHI: DataTypes.STRING(50),
         SDT: DataTypes.CHAR(10),
         EMAIL: DataTypes.STRING(50),
-        PASS: DataTypes.STRING(100),
-        NGAYDANGKY: DataTypes.DATEONLY,
-        TRANGTHAI: DataTypes.BOOLEAN,
+        PASSWORD: DataTypes.STRING(100),
 
     }, {
         sequelize,
