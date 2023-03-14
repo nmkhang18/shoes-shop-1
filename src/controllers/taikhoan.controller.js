@@ -4,7 +4,7 @@ const Sequelize = require('sequelize')
 const { sequelize } = require('../models/index')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const { loginValitdation, registValitdation, editUserValitdation, editPasswordValitdation } = require('../validations/validate')
+const { loginValitdation, registValitdation, editUserValitdation, editPasswordValitdation, forgotPasswordValitdation } = require('../validations/validate')
 const { createId } = require('../helpers/helpers')
 const OtpGenerator = require('otp-generator')
 const { insertOtp } = require('../services/otp.service')
@@ -111,6 +111,7 @@ class controller {
                 EMAIL: email,
                 PASSWORD: hashPassword
             })
+            await checkOTP.destroy()
             return res.json({
                 message: 'Create successfull'
             })
@@ -167,6 +168,83 @@ class controller {
             const hashPassword = await bcrypt.hash(new_password, salt)
             result.PASSWORD = hashPassword
             await result.save()
+            return res.json({
+                message: 'Update successfull'
+            })
+
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                status: 500,
+                message: 'Unsuccess',
+            });
+        }
+    }
+    forgotPWOTP = async (req, res) => {
+        const { email } = req.body
+        if (!email) {
+            return res.json({
+                message: 'missing data'
+            })
+        }
+        try {
+            const checkMail = await db.TAIKHOAN.findOne({
+                where: {
+                    EMAIL: email
+                }
+            })
+            if (!checkMail) return res.json({
+                message: 'account does not exist'
+            })
+            const otp = await OtpGenerator.generate(6, {
+                digits: true,
+                lowerCaseAlphabets: false,
+                upperCaseAlphabets: false,
+                specialChars: false,
+            })
+            let success = await insertOtp({ email, otp })
+            return res.json({
+                success: success,
+                otp: otp
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    changePWviaOTP = async (req, res) => {
+        const { email, new_password, repeat_password, otp } = req.body
+        const { error } = forgotPasswordValitdation(req.body)
+        if (error) return res.json({
+            message: error.details[0].message
+        })
+        try {
+            const checkOTP = await db.OTP.findByPk(email)
+            if (!checkOTP) return res.json({
+                message: ''
+            })
+            if (!bcrypt.compareSync(otp, checkOTP.VALUE)) return res.json({
+                message: 'Incorrect otp'
+            })
+            const now = new Date()
+            const expireTime = new Date(checkOTP.THOIHAN)
+            console.log(expireTime.getTime());
+            if (now.getTime() > expireTime.getTime()) return res.json({
+                message: 'OTP expired'
+            })
+
+            let result = await db.TAIKHOAN.findOne({
+                where: {
+                    EMAIL: email
+                }
+            })
+            if (!result) return res.json({
+                message: 'Not found'
+            })
+            const salt = await bcrypt.genSaltSync(10)
+            const hashPassword = await bcrypt.hash(new_password, salt)
+            result.PASSWORD = hashPassword
+            await result.save()
+            await checkOTP.destroy()
             return res.json({
                 message: 'Update successfull'
             })

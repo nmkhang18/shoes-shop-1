@@ -49,3 +49,15 @@ module.exports.editPasswordValitdation = (data) => {
 
     return schema.validate(data)
 }
+
+module.exports.forgotPasswordValitdation = (data) => {
+
+    const schema = Joi.object({
+        email: Joi.string().min(15).email().required(),
+        new_password: Joi.string().min(3).required(),
+        repeat_password: Joi.ref('new_password'),
+        otp: Joi.string().length(6).pattern(/^[0-9]+$/).required(),
+    })
+
+    return schema.validate(data)
+}
