@@ -11,8 +11,10 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             CT_KICHTHUOC.belongsTo(models.CT_MAUSAC, { foreignKey: 'IDSP' })
+            CT_KICHTHUOC.belongsTo(models.SANPHAM, { foreignKey: 'IDSP' })
             CT_KICHTHUOC.belongsTo(models.CT_MAUSAC, { foreignKey: 'IDMS' })
             CT_KICHTHUOC.belongsTo(models.KICHTHUOC, { foreignKey: 'IDKT' })
+            CT_KICHTHUOC.belongsTo(models.MAUSAC, { foreignKey: 'IDMS' })
 
 
             CT_KICHTHUOC.hasMany(models.CT_DONHANG, { foreignKey: 'IDSP' })

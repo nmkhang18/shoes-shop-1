@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
             SANPHAM.belongsTo(models.NHANHIEU, { foreignKey: 'IDNH' })
             SANPHAM.hasMany(models.CT_MAUSAC, { foreignKey: 'IDSP' })
             SANPHAM.hasMany(models.CT_DANHMUC, { foreignKey: 'IDSP' })
+            SANPHAM.hasMany(models.CT_KICHTHUOC, { foreignKey: 'IDSP' })
+            SANPHAM.hasMany(models.CT_GIOHANG, { foreignKey: 'IDSP' })
+            SANPHAM.hasMany(models.CT_DONHANG, { foreignKey: 'IDSP' })
+
+
 
 
 

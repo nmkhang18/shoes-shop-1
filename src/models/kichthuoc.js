@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             KICHTHUOC.hasMany(models.CT_KICHTHUOC, { foreignKey: 'IDKT' })
+            KICHTHUOC.hasMany(models.CT_GIOHANG, { foreignKey: 'IDKT' })
+            KICHTHUOC.hasMany(models.CT_DONHANG, { foreignKey: 'IDKT' })
+
+
         }
     }
     KICHTHUOC.init({

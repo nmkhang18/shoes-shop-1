@@ -1,5 +1,5 @@
 const express = require('express')
-const controller = require('../controllers/donhang.controller')
+const controller = require('../controllers/giohang.controller')
 const { dangnhap } = require('../middlewares/auth.middlewares')
 
 const router = express.Router()

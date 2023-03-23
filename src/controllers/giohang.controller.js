@@ -5,9 +5,6 @@ const { dangnhap } = require('../middlewares/auth.middlewares')
 
 
 class controller {
-    createDH = async (req, res) => {
-
-    }
     getAll = async (req, res) => {
 
         try {

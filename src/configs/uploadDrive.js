@@ -1,5 +1,6 @@
 const { google } = require('googleapis')
 const fs = require('fs')
+const stream = require("stream");
 const path = require('path')
 const { file } = require('googleapis/build/src/apis/file')
 require('dotenv').config()
@@ -33,8 +34,10 @@ var that = module.exports = {
 
         }
     },
-    upload: async (res, name) => {
+    upload: async (res, fileIn, name) => {
         try {
+            const bufferStream = new stream.PassThrough();
+            bufferStream.end(fileIn);
             const createFile = await drive.files.create({
                 requestBody: {
                     name: `${name}.jpg`,
@@ -42,7 +45,7 @@ var that = module.exports = {
                 },
                 media: {
                     mimeType: 'image/jpg',
-                    body: fs.createReadStream(path.join(__dirname, '/../../images/temp.jpg'))
+                    body: bufferStream
                 }
             })
             const fileId = createFile.data.id

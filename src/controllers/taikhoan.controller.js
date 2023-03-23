@@ -101,17 +101,27 @@ class controller {
 
             const salt = await bcrypt.genSaltSync(10)
             const hashPassword = await bcrypt.hash(password, salt)
-            let taikhoan = db.TAIKHOAN.create({
-                ID: createId(),
-                TENNGUOIDUNG: tennguoidung,
-                GIOITINH: gioitinh,
-                NGAYSINH: ngaysinh,
-                DIACHI: diachi,
-                SDT: sdt,
-                EMAIL: email,
-                PASSWORD: hashPassword
+            const result = await sequelize.transaction(async t => {
+                let taikhoan = await db.TAIKHOAN.create({
+                    ID: createId(),
+                    TENNGUOIDUNG: tennguoidung,
+                    GIOITINH: gioitinh,
+                    NGAYSINH: ngaysinh,
+                    DIACHI: diachi,
+                    SDT: sdt,
+                    EMAIL: email,
+                    PASSWORD: hashPassword
+                }, { transaction: t })
+
+                let giohang = await db.GIOHANG.create({
+                    IDGH: createId(),
+                    ID: taikhoan.ID
+                }, { transaction: t })
+                await checkOTP.destroy()
+
+                return { taikhoan, giohang }
+
             })
-            await checkOTP.destroy()
             return res.json({
                 message: 'Create successfull'
             })

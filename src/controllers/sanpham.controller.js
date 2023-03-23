@@ -66,48 +66,7 @@ class controller {
 
     }
     editById = async (req, res) => {
-        let uploadFile = multerConfig('images')
-        uploadFile(req, res, async (error) => {
-            let { tennhanhieu, mota, trangthai } = req.body
-            if (!tennhanhieu || !mota || !trangthai || !req.file) return res.json({
-                message: 'Missing data'
-            })
-            console.log(req.file);
-            if (error) {
-                return res.status(440).json({
-                    status: 400,
-                    message: error,
 
-                });
-            }
-
-            let idDrive = await upload(res, req.body.tennhanhieu)
-            // console.log(id);
-            const hinh = `https://drive.google.com/uc?export=view&id=${idDrive}`
-
-            try {
-                let result = await db.NHANHIEU.findByPk(req.params.id)
-                if (!result) return res.json({
-                    message: 'Not found'
-                })
-
-                result.TENNHANHIEU = tennhanhieu
-                result.MOTA = mota
-                result.HINH = hinh
-                result.TRANGTHAI = trangthai
-
-                await result.save()
-
-                return res.json({
-                    message: 'Update successfull'
-                })
-            } catch (error) {
-                return res.status(500).json({
-                    status: 500,
-                    message: 'Unsuccess',
-                });
-            }
-        })
     }
     disableById = async (req, res) => {
 
@@ -116,7 +75,7 @@ class controller {
 
     }
     add = async (req, res) => {
-        let { TENSANPHAM, NHANHIEU, MOTA, GIA, MAUSAC, KICHTHUOC } = req.body
+        let { tensanpham, nhanhieu, mota, gia, MAUSAC } = req.body
         console.log(MAUSAC);
         if (!TENSANPHAM || !NHANHIEU || !MOTA || !GIA) {
             return res.json({

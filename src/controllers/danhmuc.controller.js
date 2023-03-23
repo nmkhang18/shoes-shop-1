@@ -118,15 +118,15 @@ class controller {
 
     }
     add = async (req, res) => {
-        let { tendanhmuc, mota, trangthai } = req.body
-        if (!tendanhmuc || !mota || !trangthai) return res.json({
+        let { tendanhmuc, mota } = req.body
+        if (!tendanhmuc || !mota) return res.json({
             message: 'Missing data'
         })
         try {
             const danhmuc = await db.DANHMUCSANPHAM.create({
                 TENDANHMUC: tendanhmuc,
                 MOTA: mota,
-                TRANGTHAI: trangthai
+                TRANGTHAI: 1
             })
             return res.json({
                 message: 'Create successfull'

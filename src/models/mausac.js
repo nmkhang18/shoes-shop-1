@@ -11,6 +11,11 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             MAUSAC.hasMany(models.CT_MAUSAC, { foreignKey: 'IDMS' })
+            MAUSAC.hasMany(models.CT_KICHTHUOC, { foreignKey: 'IDMS' })
+            MAUSAC.hasMany(models.CT_GIOHANG, { foreignKey: 'IDMS' })
+            MAUSAC.hasMany(models.CT_DONHANG, { foreignKey: 'IDMS' })
+
+
         }
     }
     MAUSAC.init({

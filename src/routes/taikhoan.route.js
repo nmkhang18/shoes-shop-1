@@ -13,5 +13,3 @@ router.put('/changepassword', dangnhap, controller.editPassword)
 
 
 module.exports = router
-
-
