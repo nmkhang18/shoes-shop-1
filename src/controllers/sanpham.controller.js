@@ -19,7 +19,7 @@ class controller {
                     require: true
                 }],
 
-                attributes: ["IDSP", "TENSANPHAM", "MOTA", "GIA"],
+                attributes: ["IDSP", "TENSANPHAM", "MOTA", "GIA", "TRANGTHAI"],
 
                 where: {
                     TRANGTHAI: true
