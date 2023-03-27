@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
             CT_MAUSAC.hasMany(models.CT_KICHTHUOC, { foreignKey: 'IDMS' })
 
             CT_MAUSAC.hasMany(models.CT_GIOHANG, { foreignKey: 'IDSP' })
-            CT_MAUSAC.hasMany(models.CT_GIOHANG, { foreignKey: 'IDMS' })
+            // CT_MAUSAC.hasMany(models.CT_GIOHANG, { foreignKey: 'IDMS' })
 
             CT_MAUSAC.hasMany(models.CT_DONHANG, { foreignKey: 'IDSP' })
             CT_MAUSAC.hasMany(models.CT_DONHANG, { foreignKey: 'IDMS' })

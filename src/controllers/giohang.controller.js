@@ -1,7 +1,7 @@
 const db = require('../models/index')
-const sequelize = require('sequelize')
+const Sequelize = require('sequelize')
 const { dangnhap } = require('../middlewares/auth.middlewares')
-
+const Op = Sequelize.Op
 
 
 class controller {
@@ -21,7 +21,8 @@ class controller {
                         attributes: ['IDSP', 'TENSANPHAM', 'GIA'],
                         where: {
                             TRANGTHAI: true
-                        }
+                        },
+                        require: true
                     },
                     {
                         model: db.KICHTHUOC,
@@ -35,6 +36,14 @@ class controller {
                         require: true
 
                     },
+                    {
+                        model: db.CT_MAUSAC,
+                        attributes: ['IDSP', 'IDMS', 'THEM'],
+                        where: {
+                            IDMS: { [Op.col]: 'CT_GIOHANG.IDMS' }
+                        },
+                        require: true
+                    }
                 ],
                 where: {
                     IDGH: giohang.IDGH
@@ -47,15 +56,15 @@ class controller {
                 result: []
             })
 
-            console.log(result[0].dataValues.MAUSAC.dataValues.IDMS);
-            let them = await db.CT_MAUSAC.findOne({
-                where: {
-                    IDMS: result[0].dataValues.MAUSAC.dataValues.IDMS,
-                    IDSP: result[0].dataValues.SANPHAM.dataValues.IDSP
-                }
-            })
-            console.log(them);
-            result[0].dataValues.MAUSAC.dataValues.THEM = them.dataValues.THEM
+            // let them = await db.CT_MAUSAC.findOne({
+            //     where: {
+            //         IDMS: result[0].dataValues.MAUSAC.dataValues.IDMS,
+            //         IDSP: result[0].dataValues.SANPHAM.dataValues.IDSP
+            //     }
+            // })
+            // console.log(them);
+            // result[0].dataValues.MAUSAC.dataValues.THEM = them.dataValues.THEM
+
             return res.json({
                 result
             })

@@ -9,16 +9,41 @@ class controller {
     getAll = async (req, res) => {
         try {
             let result = await db.SANPHAM.findAll({
-                include: {
+                include: [{
                     model: db.NHANHIEU,
                     attributes: ["TENNHANHIEU"],
                     require: true
                 },
-                attributes: ["IDSP", "MOTA", "GIA"],
+                {
+                    model: db.CT_MAUSAC,
+                    require: true
+                }],
+
+                attributes: ["IDSP", "TENSANPHAM", "MOTA", "GIA"],
+
                 where: {
                     TRANGTHAI: true
                 }
             })
+            let countSL = await db.CT_KICHTHUOC.findAll({
+                attributes: [
+                    'IDSP',
+                    [sequelize.fn('sum', sequelize.col('SOLUONGDABAN')), 'DABAN'],
+                ],
+                group: ['IDSP'],
+            })
+
+
+            console.log(countSL[0]);
+
+            result = result.map(result => {
+                const sumSL = countSL.find(SL => SL.dataValues.IDSP == result.dataValues.IDSP)
+                result.dataValues.DABAN = sumSL ? sumSL.dataValues.DABAN : 0
+                result.dataValues.NHANHIEU = result.dataValues.NHANHIEU.dataValues.TENNHANHIEU
+                return result
+            })
+
+            console.log();
 
             return res.json({
                 result

@@ -87,7 +87,7 @@ class controller {
         try {
             const checkOTP = await db.OTP.findByPk(email)
             if (!checkOTP) return res.json({
-                message: ''
+                message: 'Invalid OTP'
             })
             if (!bcrypt.compareSync(otp, checkOTP.VALUE)) return res.json({
                 message: 'Incorrect otp'

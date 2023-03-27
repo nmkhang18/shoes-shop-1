@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
             CT_GIOHANG.belongsTo(models.CT_KICHTHUOC, { foreignKey: 'IDMS' })
             CT_GIOHANG.belongsTo(models.CT_KICHTHUOC, { foreignKey: 'IDKT' })
             CT_GIOHANG.belongsTo(models.CT_MAUSAC, { foreignKey: 'IDSP' })
-            CT_GIOHANG.belongsTo(models.CT_MAUSAC, { foreignKey: 'IDMS' })
+            // CT_GIOHANG.belongsTo(models.CT_MAUSAC, { foreignKey: 'IDMS' })
             CT_GIOHANG.belongsTo(models.SANPHAM, { foreignKey: 'IDSP' })
             CT_GIOHANG.belongsTo(models.KICHTHUOC, { foreignKey: 'IDKT' })
             CT_GIOHANG.belongsTo(models.MAUSAC, { foreignKey: 'IDMS' })
