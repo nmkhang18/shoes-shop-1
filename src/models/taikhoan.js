@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
         SDT: DataTypes.CHAR(10),
         EMAIL: DataTypes.STRING(50),
         PASSWORD: DataTypes.STRING(100),
+        TRANGTHAI: DataTypes.BOOLEAN
 
     }, {
         sequelize,

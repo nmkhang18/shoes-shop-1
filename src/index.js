@@ -50,7 +50,7 @@ app.use('/taikhoan', taikhoanRouter)
 
 // app.use('/thongbao', thongbaoRouter)
 // app.use('/banner', bannerRouter)
-// app.use('/nguoidung', nguoidungRouter)
+app.use('/nguoidung', nguoidungRouter)
 //==========================================================
 app.post('/admin/dangnhap', async (req, res) => {
     const { loginname, password } = req.body
