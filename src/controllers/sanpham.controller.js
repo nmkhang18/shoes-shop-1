@@ -2,11 +2,15 @@
 const db = require('../models/index')
 const Sequelize = require('sequelize')
 const { sequelize } = require('../models/index')
+const { upload, delete1 } = require('../configs/uploadDrive')
 
 
 
 class controller {
     getAll = async (req, res) => {
+
+        console.log(req.query);
+
         try {
             let result = await db.SANPHAM.findAll({
                 include: [{
@@ -39,11 +43,14 @@ class controller {
             result = result.map(result => {
                 const sumSL = countSL.find(SL => SL.dataValues.IDSP == result.dataValues.IDSP)
                 result.dataValues.DABAN = sumSL ? sumSL.dataValues.DABAN : 0
+                // result.dataValues.NHANHIEU = result.dataValues.NHANHIEU.dataValues.TENNHANHIEU
+                result.dataValues.HINH = result.dataValues.CT_MAUSACs[0].dataValues.HINHANH
                 result.dataValues.NHANHIEU = result.dataValues.NHANHIEU.dataValues.TENNHANHIEU
+                delete result.dataValues.CT_MAUSACs
                 return result
             })
 
-            console.log();
+
 
             return res.json({
                 result
@@ -59,14 +66,14 @@ class controller {
                     model: db.CT_MAUSAC,
                     include: [{
                         model: db.MAUSAC,
-                        attributes: ['MAU', "MAMAU"],
+                        attributes: ['IDMS', 'MAU', "MAMAU"],
                         required: true
                     },
                     {
                         model: db.CT_KICHTHUOC,
                         include: {
                             model: db.KICHTHUOC,
-                            attributes: ['SIZE']
+                            attributes: ['IDKT', 'SIZE']
                         },
                         attributes: ["SOLUONGTON", "SOLUONGDABAN", "TRANGTHAI"],
                         required: true
@@ -100,33 +107,53 @@ class controller {
 
     }
     add = async (req, res) => {
-        let { tensanpham, nhanhieu, mota, gia, MAUSAC } = req.body
-        console.log(MAUSAC);
-        if (!TENSANPHAM || !NHANHIEU || !MOTA || !GIA) {
-            return res.json({
-                message: "Missing data"
-            })
+
+
+
+        console.log(req.body);
+
+
+        let listHinh = []
+        let CTKT = []
+        for (let i = 0; i < req.files.file.length; i++) {
+            console.log();
+            listHinh.push(await upload(res, req.files.file[i].data, `${req.body.TENSANPHAM}${i}`))
         }
+
+
+        let SP = {
+            TENSANPHAM: req.body.TENSANPHAM,
+            GIA: req.body.GIA,
+            IDNH: req.body.NHANHIEU,
+            MOTA: req.body.MOTA
+        }
+        let CTMS = JSON.parse(req.body.CTMS)
+        for (let i = 0; i < CTMS.length; i++) {
+            CTMS[i].HINHANH = 'https://drive.google.com/uc?export=view&id=' + listHinh[i]
+            for (let j = 0; j < CTMS[i].CTKT.length; j++) {
+                CTMS[i].CTKT[j].IDMS = CTMS[i].IDMS
+                CTKT.push(CTMS[i].CTKT[j])
+            }
+            delete CTMS[i].CTKT
+        }
+        console.log(SP);
+        console.log(CTMS);
+        console.log(CTKT);
+
         try {
             const result = await sequelize.transaction(async t => {
-                let sanpham = await db.SANPHAM.create({
-                    TENSANPHAM: TENSANPHAM,
-                    NHANHIEU: NHANHIEU,
-                    MOTA: MOTA,
-                    GIA: GIA
-                }, { transaction: t })
+                let sanpham = await db.SANPHAM.create(SP, { transaction: t })
                 console.log(sanpham);
-                MAUSAC = MAUSAC.map(item => {
+                CTMS = CTMS.map(item => {
                     item.IDSP = sanpham.IDSP
                     return item
                 })
-                KICHTHUOC = KICHTHUOC.map(item => {
+                CTKT = CTKT.map(item => {
                     item.IDSP = sanpham.IDSP
                     return item
                 })
-                console.log(MAUSAC);
-                let mau = await db.CT_MAUSAC.bulkCreate(MAUSAC, { transaction: t })
-                let size = await db.CT_KICHTHUOC.bulkCreate(KICHTHUOC, { transaction: t })
+                let mau = await db.CT_MAUSAC.bulkCreate(CTMS, { transaction: t })
+                let size = await db.CT_KICHTHUOC.bulkCreate(CTKT, { transaction: t })
                 return { sanpham, mau, size }
 
             })

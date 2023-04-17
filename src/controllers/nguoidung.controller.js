@@ -22,6 +22,11 @@ class controller {
     }
 
     disableById = async (req, res) => {
+        const { trangthai } = req.body
+        if (!trangthai) return res.json({
+            message: 'missing data'
+        })
+
         try {
             let result = await db.TAIKHOAN.findByPk(req.params.id)
             if (!result) return res.json({
@@ -30,7 +35,7 @@ class controller {
 
             console.log(result);
 
-            result.TRANGTHAI = 'false'
+            result.TRANGTHAI = trangthai
 
             console.log(result);
             await result.save()

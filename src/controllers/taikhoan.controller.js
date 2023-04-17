@@ -127,7 +127,7 @@ class controller {
             })
 
         } catch (error) {
-
+            console.log(error);
         }
     }
 
