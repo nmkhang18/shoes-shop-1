@@ -38,7 +38,7 @@ class controller {
                     },
                     {
                         model: db.CT_MAUSAC,
-                        attributes: ['IDSP', 'IDMS', 'THEM'],
+                        attributes: ['IDSP', 'IDMS', 'THEM', 'HINHANH'],
                         where: {
                             IDMS: { [Op.col]: 'CT_GIOHANG.IDMS' }
                         },

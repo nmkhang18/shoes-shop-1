@@ -6,9 +6,7 @@ const Op = Sequelize.Op
 
 
 class controller {
-    createDH = async (req, res) => {
 
-    }
     getAll = async (req, res) => {
 
         try {

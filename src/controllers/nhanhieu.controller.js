@@ -10,11 +10,7 @@ class controller {
 
         try {
             let result = await db.NHANHIEU.findAll({
-                attributes: ['IDNH', 'TENNHANHIEU', 'MOTA', 'HINH'],
-                where: {
-                    TRANGTHAI: true
-                }
-
+                attributes: ['IDNH', 'TENNHANHIEU', 'MOTA', 'HINH', 'TRANGTHAI'],
             })
             return res.json({
                 result

@@ -86,6 +86,7 @@ class controller {
                 attributes: ['IDSP', 'TENSANPHAM', "GIA"],
             })
 
+
             return res.json({
                 result
             })

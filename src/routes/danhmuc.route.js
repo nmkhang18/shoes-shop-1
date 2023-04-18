@@ -9,7 +9,7 @@ router.get('/:id', controller.getById)
 
 router.put('/:id', dangnhapadmin, controller.editById)
 router.put('/disable/:id', dangnhapadmin, controller.disableById)
-router.put('/delete/:id', dangnhapadmin, controller.deleteById)
+router.delete('/:id', dangnhapadmin, controller.deleteById)
 
 router.post('/', controller.add)
 
