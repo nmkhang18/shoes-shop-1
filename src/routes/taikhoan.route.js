@@ -10,6 +10,6 @@ router.post('/dangnhap', controller.dangnhap)
 router.post('/dangky', controller.dangky)
 router.put('/', dangnhap, controller.editInfo)
 router.put('/changepassword', dangnhap, controller.editPassword)
-
+router.post('/checkFOTP', controller.checkFOTP)
 
 module.exports = router

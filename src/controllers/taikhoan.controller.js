@@ -221,6 +221,22 @@ class controller {
             console.log(error);
         }
     }
+    checkFOTP = async (req, res) => {
+        try {
+            const checkOTP = await db.OTP.findByPk(req.body.email)
+            if (!checkOTP) return res.json({
+                message: 'Invalid OTP'
+            })
+            return res.json({
+                message: 'success'
+            })
+
+        } catch (error) {
+            return res.json({
+                message: 'Try again'
+            })
+        }
+    }
     changePWviaOTP = async (req, res) => {
         const { email, new_password, repeat_password, otp } = req.body
         const { error } = forgotPasswordValitdation(req.body)

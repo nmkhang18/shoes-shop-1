@@ -91,7 +91,7 @@ class controller {
                 message: 'Not found'
             })
 
-            result.TRANGTHAI = trangthai
+            result.TRANGTHAI = false
 
             await result.save()
 

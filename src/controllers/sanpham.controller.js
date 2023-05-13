@@ -8,8 +8,56 @@ const { upload, delete1 } = require('../configs/uploadDrive')
 
 class controller {
     getAll = async (req, res) => {
+        if (req.query.nhanhieu) {
+            try {
+                let result = await db.SANPHAM.findAll({
+                    include: [{
+                        model: db.NHANHIEU,
+                        attributes: ["TENNHANHIEU"],
+                        require: true
+                    },
+                    {
+                        model: db.CT_MAUSAC,
+                        require: true
+                    }],
 
-        console.log(req.query);
+                    attributes: ["IDSP", "TENSANPHAM", "MOTA", "GIA", "TRANGTHAI"],
+
+                    where: {
+                        TRANGTHAI: true,
+                        IDNH: req.query.nhanhieu,
+                    }
+                })
+                let countSL = await db.CT_KICHTHUOC.findAll({
+                    attributes: [
+                        'IDSP',
+                        [sequelize.fn('sum', sequelize.col('SOLUONGDABAN')), 'DABAN'],
+                    ],
+                    group: ['IDSP'],
+                })
+
+
+                // console.log(countSL[0]);
+
+                result = result.map(result => {
+                    const sumSL = countSL.find(SL => SL.dataValues.IDSP == result.dataValues.IDSP)
+                    result.dataValues.DABAN = sumSL ? sumSL.dataValues.DABAN : 0
+                    // result.dataValues.NHANHIEU = result.dataValues.NHANHIEU.dataValues.TENNHANHIEU
+                    result.dataValues.HINH = result.dataValues.CT_MAUSACs[0].dataValues.HINHANH
+                    result.dataValues.NHANHIEU = result.dataValues.NHANHIEU.dataValues.TENNHANHIEU
+                    delete result.dataValues.CT_MAUSACs
+                    return result
+                })
+
+
+
+                return res.json({
+                    result
+                })
+            } catch (error) {
+                console.log(error);
+            }
+        }
 
         try {
             let result = await db.SANPHAM.findAll({
@@ -26,7 +74,7 @@ class controller {
                 attributes: ["IDSP", "TENSANPHAM", "MOTA", "GIA", "TRANGTHAI"],
 
                 where: {
-                    TRANGTHAI: true
+                    TRANGTHAI: true,
                 }
             })
             let countSL = await db.CT_KICHTHUOC.findAll({
@@ -38,7 +86,7 @@ class controller {
             })
 
 
-            console.log(countSL[0]);
+            // console.log(countSL[0]);
 
             result = result.map(result => {
                 const sumSL = countSL.find(SL => SL.dataValues.IDSP == result.dataValues.IDSP)

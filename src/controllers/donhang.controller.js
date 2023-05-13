@@ -2,6 +2,7 @@ const db = require('../models/index')
 const Sequelize = require('sequelize')
 const { dangnhap } = require('../middlewares/auth.middlewares')
 const Op = Sequelize.Op
+const { createId } = require('../helpers/helpers')
 
 
 
@@ -25,87 +26,38 @@ class controller {
 
     }
     add = async (req, res) => {
-        let { IDSP, IDMS, IDKT, SOLUONG } = req.body
-        if (!IDSP || !IDMS || !IDKT || !SOLUONG) {
-            return res.json({
-                message: "Missing data"
-            })
-        }
+
+        let { DIACHINHAN, TEN, SDT, EMAIL, PTTT } = req.body
+
+        let CTSP = JSON.parse(req.body.CTSP)
+
         try {
-            let giohang = await db.GIOHANG.findOne({
-                where: {
+            const result = await sequelize.transaction(async t => {
+                let donhang = await db.DONHANG.create({
+                    IDDH: createId(),
+                    DIACHINHAN: DIACHINHAN,
+                    TEN: TEN,
+                    SDT: SDT,
+                    EMAIL: EMAIL,
+                    PT_THANHTOAN: PTTT,
                     ID: req.user._id
-                }
-            })
-            let newProc = await db.CT_GIOHANG.create({
-                IDGH: giohang.IDGH,
-                IDSP: IDSP,
-                IDMS: IDMS,
-                IDKT: IDKT,
-                SOLUONG: SOLUONG
-            })
+                }, { transaction: t })
 
-            return res.json({
-                message: 'success'
-            })
-        } catch (error) {
-
-            console.log(error.parent.code);
-            if (error.parent.code == 23505) {
-                let alterProc = await db.CT_GIOHANG.findOne({
-                    where: {
-                        IDGH: error.parent.parameters[0],
-                        IDSP: error.parent.parameters[1],
-                        IDMS: error.parent.parameters[2],
-                        IDKT: error.parent.parameters[3]
-                    }
+                CTSP = CTSP.map(item => {
+                    item.IDDH = sanpham.IDDH
+                    return item
                 })
 
-                alterProc.SOLUONG += parseInt(error.parent.parameters[4])
-                await alterProc.save()
+                let ct = await db.CT_DONHANG.bulkCreate(CTSP, { transaction: t })
+                return { donhang, ct }
 
-                return res.json({
-                    message: 'success'
-                })
-            }
-
-        }
-
-    }
-
-    editSL = async (req, res) => {
-        let { IDSP, IDMS, IDKT, SOLUONG } = req.body
-        if (!IDSP || !IDMS || !IDKT || !SOLUONG) {
-            return res.json({
-                message: "Missing data"
             })
-        }
-        try {
-            let giohang = await db.GIOHANG.findOne({
-                where: {
-                    ID: req.user._id
-                }
-            })
-
-            let alterProc = await db.CT_GIOHANG.findOne({
-                where: {
-                    IDGH: giohang.IDGH,
-                    IDSP: IDSP,
-                    IDMS: IDMS,
-                    IDKT: IDKT
-                }
-            })
-
-            alterProc.SOLUONG = parseInt(SOLUONG)
-            await alterProc.save()
-
-            return res.json({
-                message: 'success'
-            })
+            return res.json(result)
         } catch (error) {
 
         }
     }
+
 }
 
 
