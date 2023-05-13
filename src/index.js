@@ -73,6 +73,8 @@ app.post('/admin/dangnhap', async (req, res) => {
 app.post('/test', async (req, res) => {
     console.log(req.files.file);
     console.log(req.body)
+    let listHinh = []
+
     for (let i = 0; i < req.files.file.length; i++) {
         console.log();
         listHinh.push(await upload(res, req.files.file[i].data, `${req.body.TENSANPHAM}${i}`))
