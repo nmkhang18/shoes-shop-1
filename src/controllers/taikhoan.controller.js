@@ -223,9 +223,19 @@ class controller {
     }
     checkFOTP = async (req, res) => {
         try {
-            const checkOTP = await db.OTP.findByPk(req.body.email)
+            const { email, otp } = req.body
+            const checkOTP = await db.OTP.findByPk(email)
             if (!checkOTP) return res.json({
-                message: 'Invalid OTP'
+                message: ''
+            })
+            if (!bcrypt.compareSync(otp, checkOTP.VALUE)) return res.json({
+                message: 'Incorrect otp'
+            })
+            const now = new Date()
+            const expireTime = new Date(checkOTP.THOIHAN)
+            console.log(expireTime.getTime());
+            if (now.getTime() > expireTime.getTime()) return res.json({
+                message: 'OTP expired'
             })
             return res.json({
                 message: 'success'
