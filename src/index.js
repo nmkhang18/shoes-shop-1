@@ -69,6 +69,13 @@ app.post('/admin/dangnhap', async (req, res) => {
     })
 
 })
+
+app.post('/test', async (req, res) => {
+    console.log(req.files.file);
+    console.log(req.body)
+
+})
+
 app.listen(port, () => {
     console.log(`Listening to port ${port}`);
 })
