@@ -158,6 +158,39 @@ class controller {
 
         }
     }
+    deleteGH = async (req, res) => {
+        let { IDSP, IDMS, IDKT } = req.body
+        if (!IDSP || !IDMS || !IDKT) {
+            return res.json({
+                message: "Missing data"
+            })
+        }
+        try {
+            let giohang = await db.GIOHANG.findOne({
+                where: {
+                    ID: req.user._id
+                }
+            })
+
+            let proc = await db.CT_GIOHANG.findOne({
+                where: {
+                    IDGH: giohang.IDGH,
+                    IDSP: IDSP,
+                    IDMS: IDMS,
+                    IDKT: IDKT
+                }
+            })
+
+            await proc.destroy()
+
+            return res.json({
+                message: 'success'
+            })
+        } catch (error) {
+
+        }
+
+    }
 }
 
 

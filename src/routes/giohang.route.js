@@ -7,6 +7,8 @@ const router = express.Router()
 router.get('/', dangnhap, controller.getAll)
 router.post('/', dangnhap, controller.add)
 router.put('/', dangnhap, controller.editSL)
+router.delete('/', dangnhap, controller.deleteGH)
+
 
 
 
