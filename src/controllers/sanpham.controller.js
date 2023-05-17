@@ -152,7 +152,9 @@ class controller {
 
             console.log(records);
 
-            return res.json(records)
+            return res.json({
+                result: records[0]
+            })
 
 
         } catch (error) {
