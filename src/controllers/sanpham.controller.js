@@ -3,7 +3,7 @@ const db = require('../models/index')
 const Sequelize = require('sequelize')
 const { sequelize } = require('../models/index')
 const { upload, delete1 } = require('../configs/uploadDrive')
-
+const { reset } = require('nodemon')
 
 
 class controller {
@@ -109,35 +109,52 @@ class controller {
     }
     getById = async (req, res) => {
         try {
-            let result = await db.SANPHAM.findByPk(req.params.id, {
-                include: {
-                    model: db.CT_MAUSAC,
-                    include: [{
-                        model: db.MAUSAC,
-                        attributes: ['IDMS', 'MAU', "MAMAU"],
-                        required: true
-                    },
-                    {
-                        model: db.CT_KICHTHUOC,
-                        include: {
-                            model: db.KICHTHUOC,
-                            attributes: ['IDKT', 'SIZE']
-                        },
-                        attributes: ["SOLUONGTON", "SOLUONGDABAN", "TRANGTHAI"],
-                        required: true
-                    },
-                    ],
-                    attributes: ["THEM", "HINHANH", "TRANGTHAI"],
-                    required: true
 
-                },
-                attributes: ['IDSP', 'TENSANPHAM', "GIA"],
+            let records = await sequelize.query(`SELECT *
+                                                    FROM PUBLIC."SANPHAM" SP
+                                                    WHERE SP."IDSP" = ${req.params.id}`, {
+                nest: true,
+                type: Sequelize.QueryTypes.SELECT
+            });
+
+            let records1 = await sequelize.query(`SELECT SP."IDMS", MS."MAMAU", MS."MAU", SP."THEM", SP."HINHANH"
+                                                    FROM PUBLIC."CT_MAUSAC" SP, PUBLIC."MAUSAC" MS
+                                                    WHERE SP."IDMS" = MS."IDMS" AND SP."IDSP" = ${req.params.id}`, {
+                nest: true,
+                type: Sequelize.QueryTypes.SELECT
+            });
+            let records2 = await sequelize.query(`SELECT SP."IDKT", KT."SIZE", SP."SOLUONGTON", SP."SOLUONGDABAN", SP."IDMS"
+                                                    FROM PUBLIC."CT_KICHTHUOC" SP, PUBLIC."KICHTHUOC" KT
+                                                    WHERE SP."IDKT" = KT."IDKT"  AND SP."IDSP" = ${req.params.id}`, {
+                nest: true,
+                type: Sequelize.QueryTypes.SELECT
+            });
+
+            console.log(records2);
+
+            records1 = records1.map(result => {
+                let temp = []
+
+                for (let i = 0; i < records2.length; i++) {
+                    if (records2[i].IDMS == result.IDMS) {
+                        delete records2[i].IDMS
+                        temp.push(records2[i])
+                    }
+                }
+                result.CT_KICHTHUOCs = temp
+                return result
             })
 
-
-            return res.json({
-                result
+            records = records.map(result => {
+                result.CT_MAUSACs = records1
+                return result
             })
+
+            console.log(records);
+
+            return res.json(records)
+
+
         } catch (error) {
             return res.status(500).json({
                 status: 500,
