@@ -195,6 +195,7 @@ class controller {
             IDNH: req.body.NHANHIEU,
             MOTA: req.body.MOTA
         }
+        console.log(req.body.CTMS);
         let CTMS = JSON.parse(req.body.CTMS)
         for (let i = 0; i < CTMS.length; i++) {
             CTMS[i].HINHANH = 'https://drive.google.com/uc?export=view&id=' + listHinh[i]

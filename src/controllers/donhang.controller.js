@@ -3,6 +3,8 @@ const Sequelize = require('sequelize')
 const { dangnhap } = require('../middlewares/auth.middlewares')
 const Op = Sequelize.Op
 const { createId } = require('../helpers/helpers')
+const { sequelize } = require('../models/index')
+
 
 
 
@@ -31,6 +33,8 @@ class controller {
 
         let CTSP = JSON.parse(req.body.CTSP)
 
+        console.log(CTSP);
+
         try {
             const result = await sequelize.transaction(async t => {
                 let donhang = await db.DONHANG.create({
@@ -44,7 +48,7 @@ class controller {
                 }, { transaction: t })
 
                 CTSP = CTSP.map(item => {
-                    item.IDDH = sanpham.IDDH
+                    item.IDDH = donhang.IDDH
                     return item
                 })
 
@@ -54,7 +58,7 @@ class controller {
             })
             return res.json(result)
         } catch (error) {
-
+            console.log(error);
         }
     }
 
