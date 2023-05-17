@@ -110,20 +110,20 @@ class controller {
     getById = async (req, res) => {
         try {
 
-            let records = await sequelize.query(`SELECT *
+            let records = await sequelize.query(`SELECT SP."IDSP", SP."TENSANPHAM", SP."GIA"
                                                     FROM PUBLIC."SANPHAM" SP
                                                     WHERE SP."IDSP" = ${req.params.id}`, {
                 nest: true,
                 type: Sequelize.QueryTypes.SELECT
             });
 
-            let records1 = await sequelize.query(`SELECT SP."IDMS", MS."MAMAU", MS."MAU", SP."THEM", SP."HINHANH"
+            let records1 = await sequelize.query(`SELECT SP."IDMS", MS."MAMAU", MS."MAU", SP."THEM", SP."HINHANH", SP."TRANGTHAI"
                                                     FROM PUBLIC."CT_MAUSAC" SP, PUBLIC."MAUSAC" MS
                                                     WHERE SP."IDMS" = MS."IDMS" AND SP."IDSP" = ${req.params.id}`, {
                 nest: true,
                 type: Sequelize.QueryTypes.SELECT
             });
-            let records2 = await sequelize.query(`SELECT SP."IDKT", KT."SIZE", SP."SOLUONGTON", SP."SOLUONGDABAN", SP."IDMS"
+            let records2 = await sequelize.query(`SELECT SP."IDKT", KT."SIZE", SP."SOLUONGTON", SP."SOLUONGDABAN", SP."IDMS", SP."TRANGTHAI"
                                                     FROM PUBLIC."CT_KICHTHUOC" SP, PUBLIC."KICHTHUOC" KT
                                                     WHERE SP."IDKT" = KT."IDKT"  AND SP."IDSP" = ${req.params.id}`, {
                 nest: true,
