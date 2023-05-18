@@ -296,7 +296,7 @@ class controller {
     getInfo = async (req, res) => {
         try {
             let result = await db.TAIKHOAN.findByPk(req.user._id, {
-                attributes: ['TENNGUOIDUNG', 'GIOITINH', 'NGAYSINH', 'SDT', 'EMAIL']
+                attributes: ['TENNGUOIDUNG', 'GIOITINH', 'NGAYSINH', 'SDT', 'EMAIL', 'DIACHI']
             })
             return res.json(result)
         } catch (error) {
