@@ -10,16 +10,15 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            // CT_DONHANG.belongsTo(models.CT_KICHTHUOC, { foreignKey: 'IDSP' })
-            // CT_DONHANG.belongsTo(models.CT_KICHTHUOC, { foreignKey: 'IDMS' })
-            // CT_DONHANG.belongsTo(models.CT_KICHTHUOC, { foreignKey: 'IDKT' })
-            // CT_DONHANG.belongsTo(models.DONHANG, { foreignKey: 'IDDH' })
-            // CT_DONHANG.belongsTo(models.CT_MAUSAC, { foreignKey: 'IDSP' })
-            // // CT_DONHANG.belongsTo(models.CT_MAUSAC, { foreignKey: 'IDMS' })
-            // CT_DONHANG.belongsTo(models.SANPHAM, { foreignKey: 'IDSP' })
-            // CT_DONHANG.belongsTo(models.KICHTHUOC, { foreignKey: 'IDKT' })
-            // CT_DONHANG.belongsTo(models.MAUSAC, { foreignKey: 'IDMS' })
-            // CT_DONHANG.belongsTo(models.GIOHANG, { foreignKey: 'IDGH' })
+            CT_DONHANG.belongsTo(models.CT_KICHTHUOC, { foreignKey: 'IDSP' })
+            CT_DONHANG.belongsTo(models.CT_KICHTHUOC, { foreignKey: 'IDMS' })
+            CT_DONHANG.belongsTo(models.CT_KICHTHUOC, { foreignKey: 'IDKT' })
+            CT_DONHANG.belongsTo(models.DONHANG, { foreignKey: 'IDDH' })
+            CT_DONHANG.belongsTo(models.CT_MAUSAC, { foreignKey: 'IDSP' })
+            // CT_DONHANG.belongsTo(models.CT_MAUSAC, { foreignKey: 'IDMS' })
+            CT_DONHANG.belongsTo(models.SANPHAM, { foreignKey: 'IDSP' })
+            CT_DONHANG.belongsTo(models.KICHTHUOC, { foreignKey: 'IDKT' })
+            CT_DONHANG.belongsTo(models.MAUSAC, { foreignKey: 'IDMS' })
 
         }
     }

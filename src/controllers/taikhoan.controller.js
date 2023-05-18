@@ -9,6 +9,7 @@ const { createId } = require('../helpers/helpers')
 const OtpGenerator = require('otp-generator')
 const { insertOtp } = require('../services/otp.service')
 const { date } = require('joi')
+const { dlp_v2 } = require('googleapis')
 
 class controller {
 
@@ -132,7 +133,7 @@ class controller {
     }
 
     editInfo = async (req, res) => {
-        const { tennguoidung, gioitinh, ngaysinh, diachi, sdt } = req.body
+        const { tennguoidung, gioitinh, ngaysinh, sdt } = req.body
         const { error } = editUserValitdation(req.body)
         if (error) return res.json({
             message: error.details[0].message
@@ -146,7 +147,6 @@ class controller {
             result.GIOITINH = gioitinh
             result.NGAYSINH = ngaysinh
             result.SDT = sdt
-            result.DIACHI = diachi
             await result.save()
             return res.json({
                 message: 'Update successfull'
@@ -281,6 +281,39 @@ class controller {
             result.PASSWORD = hashPassword
             await result.save()
             await checkOTP.destroy()
+            return res.json({
+                message: 'Update successfull'
+            })
+
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                status: 500,
+                message: 'Unsuccess',
+            });
+        }
+    }
+    getInfo = async (req, res) => {
+        try {
+            let result = await db.TAIKHOAN.findByPk(req.user._id, {
+                attributes: ['TENNGUOIDUNG', 'GIOITINH', 'NGAYSINH', 'SDT', 'EMAIL']
+            })
+            return res.json(result)
+        } catch (error) {
+            return res.json({
+                message: 'Error'
+            })
+        }
+    }
+    editDC = async (req, res) => {
+        const { diachi } = req.body
+        try {
+            let result = await db.TAIKHOAN.findByPk(req.user._id)
+            if (!result) return res.json({
+                message: 'Not found'
+            })
+            result.DIACHI = diachi
+            await result.save()
             return res.json({
                 message: 'Update successfull'
             })

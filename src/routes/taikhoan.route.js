@@ -9,7 +9,9 @@ router.post('/forgot/changepassword', controller.changePWviaOTP)
 router.post('/dangnhap', controller.dangnhap)
 router.post('/dangky', controller.dangky)
 router.put('/', dangnhap, controller.editInfo)
+router.put('/editDC', dangnhap, controller.editDC)
 router.put('/changepassword', dangnhap, controller.editPassword)
 router.post('/checkFOTP', controller.checkFOTP)
+router.get('/', dangnhap, controller.getInfo)
 
 module.exports = router

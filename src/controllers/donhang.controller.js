@@ -14,13 +14,49 @@ class controller {
 
         try {
 
-            let donhang = await db.DONHANG.findOne({
+            let donhang = await db.DONHANG.findAll({
+                include: {
+                    model: db.CT_DONHANG,
+                    include: [
+                        {
+                            model: db.SANPHAM,
+                            attributes: ['IDSP', 'TENSANPHAM', 'GIA'],
+                            where: {
+                                TRANGTHAI: true
+                            },
+                            require: true
+                        },
+                        {
+                            model: db.KICHTHUOC,
+                            attributes: ['IDKT', 'SIZE'],
+                            require: true
+
+                        },
+                        {
+                            model: db.MAUSAC,
+                            attributes: ['IDMS', 'MAU', 'MAMAU'],
+                            require: true
+
+                        },
+                        {
+                            model: db.CT_MAUSAC,
+                            attributes: ['IDSP', 'IDMS', 'THEM', 'HINHANH'],
+                            where: {
+                                IDMS: { [Op.col]: 'CT_DONHANGs.IDMS' }
+                            },
+                            require: true
+                        }
+                    ],
+                    attributes: ['SOLUONG'],
+                    required: true
+                },
                 where: {
                     ID: req.user._id
                 }
             })
 
-            res.json({ donhang })
+
+            return res.json({ donhang })
         } catch (error) {
             console.log(error);
         }

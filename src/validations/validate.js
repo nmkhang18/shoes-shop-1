@@ -33,7 +33,7 @@ module.exports.editUserValitdation = (data) => {
         tennguoidung: Joi.string().min(6).required(),
         ngaysinh: Joi.date().iso().required(),
         gioitinh: Joi.string().min(2).required(),
-        diachi: Joi.string().min(6).required(),
+        // diachi: Joi.string().min(6).required(),
         sdt: Joi.string().length(10).pattern(/^[0-9]+$/).required(),
     })
 
