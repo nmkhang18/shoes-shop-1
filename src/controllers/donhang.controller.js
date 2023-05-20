@@ -92,9 +92,20 @@ class controller {
                 return { donhang, ct }
 
             })
-            return res.json(result)
+
+            if (result) {
+                return res.json({
+                    message: 'success'
+                })
+            }
+
+            return res.json({
+                message: 'failed'
+            })
         } catch (error) {
-            console.log(error);
+            return res.json({
+                message: 'failed'
+            })
         }
     }
 
