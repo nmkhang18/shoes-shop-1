@@ -110,7 +110,7 @@ class controller {
     getById = async (req, res) => {
         try {
 
-            let records = await sequelize.query(`SELECT SP."IDSP", SP."TENSANPHAM", SP."GIA"
+            let records = await sequelize.query(`SELECT SP."IDSP", SP."TENSANPHAM", SP."GIA", SP,"MOTA"
                                                     FROM PUBLIC."SANPHAM" SP
                                                     WHERE SP."IDSP" = ${req.params.id}`, {
                 nest: true,
