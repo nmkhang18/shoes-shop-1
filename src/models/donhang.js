@@ -20,13 +20,12 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.CHAR(15),
             primaryKey: true,
         },
-        NGAYDAT: DataTypes.DATEONLY,
         DIACHINHAN: DataTypes.STRING(50),
         TEN: DataTypes.STRING(50),
         SDT: DataTypes.CHAR(10),
         EMAIL: DataTypes.STRING(50),
         PT_THANHTOAN: DataTypes.STRING(50),
-        TT_THANHTOAN: DataTypes.BOOLEAN,
+        TRANGTHAI: DataTypes.STRING(50),
         ID: DataTypes.CHAR(15)
 
 

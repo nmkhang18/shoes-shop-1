@@ -52,7 +52,8 @@ class controller {
                 },
                 where: {
                     ID: req.user._id
-                }
+                },
+                attributes: ['IDDH', 'DIACHINHAN', 'TEN', 'SDT', 'EMAIL', 'PT_THANHTOAN', 'createdAt', 'TRANGTHAI']
             })
 
 
@@ -80,6 +81,7 @@ class controller {
                     SDT: SDT,
                     EMAIL: EMAIL,
                     PT_THANHTOAN: PTTT,
+                    TRANGTHAI: 'Đặt hàng thành công',
                     ID: req.user._id
                 }, { transaction: t })
 
@@ -106,6 +108,24 @@ class controller {
             return res.json({
                 message: 'failed'
             })
+        }
+    }
+    cancelDH = async (req, res) => {
+        try {
+            let result = await db.DONHANG.findByPk(req.params.id)
+            if (!result) return res.json({
+                message: 'Not found'
+            })
+            result.TRANGTHAI = 'Đã hủy'
+            await result.save()
+            return res.json({
+                message: 'success'
+            })
+        } catch (error) {
+            return res.status(500).json({
+                status: 500,
+                message: 'Unsuccess',
+            });
         }
     }
 
