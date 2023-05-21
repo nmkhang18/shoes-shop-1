@@ -44,6 +44,7 @@ class controller {
     }
     editById = async (req, res) => {
         let { tendanhmuc, mota, trangthai } = req.body
+        console.log(req.body);
         if (!tendanhmuc || !mota || !trangthai) return res.json({
             message: 'Missing data'
         })
