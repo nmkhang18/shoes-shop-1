@@ -49,7 +49,7 @@ class controller {
         // let uploadFile = multerConfig('images')
         // uploadFile(req, res, async (error) => {
         let { tennhanhieu, mota, trangthai } = req.body
-        if (!tennhanhieu || !mota || !trangthai || !req.files) return res.json({
+        if (!tennhanhieu || !mota || !trangthai) return res.json({
             message: 'Missing data'
         })
         console.log(req.files);
@@ -60,13 +60,14 @@ class controller {
             if (!result) return res.json({
                 message: 'Not found'
             })
-
-            let idDrive = await upload(res, req.files.file.data, req.body.tennhanhieu)
-            // console.log(id);
-            const hinh = `https://drive.google.com/uc?export=view&id=${idDrive}`
+            if (req.files) {
+                let idDrive = await upload(res, req.files.file.data, req.body.tennhanhieu)
+                // console.log(id);
+                const hinh = `https://drive.google.com/uc?export=view&id=${idDrive}`
+                result.HINH = hinh
+            }
             result.TENNHANHIEU = tennhanhieu
             result.MOTA = mota
-            result.HINH = hinh
             result.TRANGTHAI = trangthai
 
             await result.save()
