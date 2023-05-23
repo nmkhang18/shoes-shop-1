@@ -36,7 +36,6 @@ class controller {
                     group: ['IDSP'],
                 })
 
-
                 // console.log(countSL[0]);
 
                 result = result.map(result => {
@@ -53,6 +52,114 @@ class controller {
 
                 return res.json({
                     result
+                })
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        if (req.query.danhmuc) {
+            try {
+                console.log(req.query.danhmuc);
+                let result = await db.CT_DANHMUC.findAll({
+                    include: {
+                        model: db.SANPHAM,
+                        attributes: ["IDSP", "TENSANPHAM", "MOTA", "GIA", "TRANGTHAI"],
+                        include: [{
+                            model: db.NHANHIEU,
+                            attributes: ["TENNHANHIEU"],
+                            required: true
+                        },
+                        {
+                            model: db.CT_MAUSAC,
+                            required: true
+                        }],
+
+                        attributes: ["IDSP", "TENSANPHAM", "MOTA", "GIA", "TRANGTHAI"],
+
+                    },
+                    where: {
+                        IDDM: req.query.danhmuc
+                    }
+
+                })
+
+                let result1 = await db.SANPHAM.findAll({
+                    include: [{
+                        model: db.NHANHIEU,
+                        attributes: ["TENNHANHIEU"],
+                        require: true
+                    },
+                    {
+                        model: db.CT_MAUSAC,
+                        require: true
+                    }],
+
+                    attributes: ["IDSP", "TENSANPHAM", "MOTA", "GIA", "TRANGTHAI"],
+
+                    where: {
+                        TRANGTHAI: true,
+                    }
+                })
+
+                result = result.map(result => {
+                    return result.dataValues.SANPHAM
+                })
+
+                for (let i = 0; i < result1.length; i++) {
+                    for (let j = 0; j < result.length; j++) {
+                        if (result1[i].dataValues.IDSP == result[j].dataValues.IDSP) {
+                            result1.splice(i, 1)
+                        }
+                    }
+                }
+
+                let countSL = await db.CT_KICHTHUOC.findAll({
+                    attributes: [
+                        'IDSP',
+                        [sequelize.fn('sum', sequelize.col('SOLUONGDABAN')), 'DABAN'],
+                    ],
+                    group: ['IDSP'],
+                })
+
+
+                // return res.json(result)
+
+                // console.log(countS   L[0]);
+                result = result.map(result => {
+                    const sumSL = countSL.find(SL => SL.dataValues.IDSP == result.dataValues.IDSP)
+                    result.dataValues.DABAN = sumSL ? sumSL.dataValues.DABAN : 0
+                    // result.dataValues.NHANHIEU = result.dataValues.NHANHIEU.dataValues.TENNHANHIEU
+                    result.dataValues.HINH = result.dataValues.CT_MAUSACs[0].dataValues.HINHANH
+                    result.dataValues.NHANHIEU = result.dataValues.NHANHIEU.dataValues.TENNHANHIEU
+                    delete result.dataValues.CT_MAUSACs
+                    return result
+                })
+
+                let countSL1 = await db.CT_KICHTHUOC.findAll({
+                    attributes: [
+                        'IDSP',
+                        [sequelize.fn('sum', sequelize.col('SOLUONGDABAN')), 'DABAN'],
+                    ],
+                    group: ['IDSP'],
+                })
+
+
+                // console.log(countSL[0]);
+
+                result1 = result1.map(result => {
+                    const sumSL = countSL1.find(SL => SL.dataValues.IDSP == result.dataValues.IDSP)
+                    result.dataValues.DABAN = sumSL ? sumSL.dataValues.DABAN : 0
+                    // result.dataValues.NHANHIEU = result.dataValues.NHANHIEU.dataValues.TENNHANHIEU
+                    result.dataValues.HINH = result.dataValues.CT_MAUSACs[0].dataValues.HINHANH
+                    result.dataValues.NHANHIEU = result.dataValues.NHANHIEU.dataValues.TENNHANHIEU
+                    delete result.dataValues.CT_MAUSACs
+                    return result
+                })
+
+
+                return res.json({
+                    result,
+                    others: result1
                 })
             } catch (error) {
                 console.log(error);
@@ -84,6 +191,8 @@ class controller {
                 ],
                 group: ['IDSP'],
             })
+
+
 
 
             // console.log(countSL[0]);

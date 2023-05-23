@@ -12,6 +12,10 @@ router.put('/disable/:id', dangnhapadmin, controller.disableById)
 router.delete('/:id', dangnhapadmin, controller.deleteById)
 
 router.post('/', controller.add)
+router.post('/sanpham/:id', controller.addDM_SP)
+router.put('/sanpham/:id', controller.deleteDM_SP)
+
+
 
 
 module.exports = router

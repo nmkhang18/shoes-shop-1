@@ -1,6 +1,7 @@
 // const { pool } = require('../configs/connectDB')
 const db = require('../models/index')
-const sequelize = require('sequelize')
+const Sequelize = require('sequelize')
+const { sequelize } = require('../models/index')
 
 
 class controller {
@@ -141,6 +142,51 @@ class controller {
                 message: 'Unsuccess',
             });
 
+        }
+    }
+    addDM_SP = async (req, res) => {
+        let temp = JSON.parse(req.body.CTDM)
+
+        // CTDM = CTDM.map(result => {
+        //     result.IDSP
+        //     result.IDDM = req.params.id
+        //     return result
+        // })
+
+        let CTDM = []
+
+        for (let i = 0; i < temp.length; i++) {
+            CTDM.push({ "IDDM": req.params.id, "IDSP": temp[i] })
+        }
+
+
+        try {
+            const DMSP = await db.CT_DANHMUC.bulkCreate(CTDM)
+            return res.json({
+                DMSP
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    deleteDM_SP = async (req, res) => {
+        let CTDM = JSON.parse(req.body.CTDM)
+
+        try {
+            const DMSP = await db.CT_DANHMUC.destroy({
+                where: {
+                    IDDM: req.params.id,
+                    IDSP: CTDM
+                }
+            })
+
+
+
+            return res.json({
+                DMSP
+            })
+        } catch (error) {
+            console.log(error);
         }
     }
 }
