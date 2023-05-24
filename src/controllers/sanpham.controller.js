@@ -182,7 +182,8 @@ class controller {
 
                 where: {
                     TRANGTHAI: true,
-                }
+                },
+                order: [['IDSP', 'DESC']],
             })
             let countSL = await db.CT_KICHTHUOC.findAll({
                 attributes: [

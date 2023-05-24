@@ -13,7 +13,7 @@ router.delete('/:id', dangnhapadmin, controller.deleteById)
 
 router.post('/', controller.add)
 router.post('/sanpham/:id', controller.addDM_SP)
-router.put('/sanpham/:id', controller.deleteDM_SP)
+router.delete('/sanpham/:id', controller.deleteDM_SP)
 
 
 
