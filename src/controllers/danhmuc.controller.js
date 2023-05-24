@@ -145,6 +145,13 @@ class controller {
         }
     }
     addDM_SP = async (req, res) => {
+
+        if (!req.body.CTDM) {
+            return res.json({
+                message: 'missing data'
+            })
+        }
+
         let temp = JSON.parse(req.body.CTDM)
 
         // CTDM = CTDM.map(result => {
@@ -170,6 +177,12 @@ class controller {
         }
     }
     deleteDM_SP = async (req, res) => {
+
+        if (!req.body.CTDM) {
+            return res.json({
+                message: 'missing data'
+            })
+        }
         let CTDM = JSON.parse(req.body.CTDM)
 
         try {
