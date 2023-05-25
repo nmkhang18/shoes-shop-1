@@ -28,7 +28,7 @@ class controller {
             if (!result) return res.json({
                 message: 'Email does not exist'
             })
-            if (result.TRANGTHAI == 'false') return res.json({
+            if (result.TRANGTHAI == false) return res.json({
                 message: 'Account banned'
             })
             if (!bcrypt.compareSync(password, result.PASSWORD)) return res.json({
