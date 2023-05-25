@@ -197,6 +197,60 @@ class controller {
 
     }
 
+    getAllAdmCT = async (req, res) => {
+
+        try {
+
+            let donhang = await db.DONHANG.findAll({
+                include: {
+                    model: db.CT_DONHANG,
+                    include: [
+                        {
+                            model: db.SANPHAM,
+                            attributes: ['IDSP', 'TENSANPHAM', 'GIA'],
+                            where: {
+                                TRANGTHAI: true
+                            },
+                            require: true
+                        },
+                        {
+                            model: db.KICHTHUOC,
+                            attributes: ['IDKT', 'SIZE'],
+                            require: true
+
+                        },
+                        {
+                            model: db.MAUSAC,
+                            attributes: ['IDMS', 'MAU', 'MAMAU'],
+                            require: true
+
+                        },
+                        {
+                            model: db.CT_MAUSAC,
+                            attributes: ['IDSP', 'IDMS', 'THEM', 'HINHANH'],
+                            where: {
+                                IDMS: { [Op.col]: 'CT_DONHANGs.IDMS' }
+                            },
+                            require: true
+                        }
+                    ],
+                    attributes: ['SOLUONG'],
+                    required: true
+                },
+                where: {
+                    IDDH: req.params.id
+                },
+                attributes: ['IDDH', 'DIACHINHAN', 'TEN', 'SDT', 'EMAIL', 'PT_THANHTOAN', 'createdAt', 'TRANGTHAI']
+            })
+
+
+            return res.json({ donhang })
+        } catch (error) {
+            console.log(error);
+        }
+
+
+    }
     changeTT = async (req, res) => {
         if (!req.body.trangthai) {
             return res.json({
