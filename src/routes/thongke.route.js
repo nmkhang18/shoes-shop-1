@@ -4,7 +4,7 @@ const router = express.Router()
 const { dangnhapadmin } = require('../middlewares/auth.middlewares')
 
 
-router.get('/:month', controller.getAll)
+router.get('/', controller.getByMonth)
 
 
 

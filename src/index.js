@@ -39,6 +39,8 @@ const nguoidungRouter = require('./routes/nguoidung.route')
 const taikhoanRouter = require('./routes/taikhoan.route')
 const giohangRouter = require('./routes/giohang.route')
 const thongkeRouter = require('./routes/thongke.route')
+const othersRouter = require('./routes/others.route')
+
 
 
 
@@ -52,6 +54,8 @@ app.use('/giohang', giohangRouter)
 app.use('/taikhoan', taikhoanRouter)
 app.use('/thongke', thongkeRouter)
 app.use('/banner', bannerRouter)
+app.use('/others', othersRouter)
+
 
 
 
