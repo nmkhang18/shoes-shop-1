@@ -344,6 +344,10 @@ class controller {
             console.log(error);
         }
     }
+
+    checkSL = async (req, res) => {
+
+    }
 }
 
 module.exports = new controller

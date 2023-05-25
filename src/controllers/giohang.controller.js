@@ -1,5 +1,7 @@
 const db = require('../models/index')
 const Sequelize = require('sequelize')
+const { sequelize } = require('../models/index')
+
 const { dangnhap } = require('../middlewares/auth.middlewares')
 const Op = Sequelize.Op
 
@@ -48,7 +50,7 @@ class controller {
                 where: {
                     IDGH: giohang.IDGH
                 },
-                attributes: ['SOLUONG'],
+                attributes: ['SOLUONG',],
                 require: true
             })
 
@@ -56,6 +58,26 @@ class controller {
                 result: []
             })
 
+
+            for (let i = 0; i < result.length; i++) {
+                console.log(result[i].SANPHAM.IDSP);
+            }
+
+            result = await Promise.all(result.map(async result1 => {
+                let records2 = await sequelize.query(`SELECT "SOLUONGTON"
+                                                FROM PUBLIC."CT_KICHTHUOC"
+                                                WHERE "IDSP" = ${result1.SANPHAM.IDSP} AND "IDMS" = ${result1.MAUSAC.IDMS} AND "IDKT" = ${result1.KICHTHUOC.IDKT}`, {
+                    nest: true,
+                    type: Sequelize.QueryTypes.SELECT
+                });
+
+                console.log(records2[0].SOLUONGTON);
+
+                result1.dataValues.SOLUONGTON = records2[0].SOLUONGTON
+                return result1
+            })
+            )
+            console.log(result);
             // let them = await db.CT_MAUSAC.findOne({
             //     where: {
             //         IDMS: result[0].dataValues.MAUSAC.dataValues.IDMS,
