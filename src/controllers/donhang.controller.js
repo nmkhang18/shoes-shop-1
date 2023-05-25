@@ -90,7 +90,23 @@ class controller {
                     return item
                 })
 
+
                 let ct = await db.CT_DONHANG.bulkCreate(CTSP, { transaction: t })
+
+                for (let i = 0; i < CTSP.length; i++) {
+                    let ctkt = await db.CT_KICHTHUOC.findOne({
+                        where: {
+                            IDSP: CTSP[i].IDSP,
+                            IDMS: CTSP[i].IDMS,
+                            IDKT: CTSP[i].IDKT
+                        }
+                    })
+                    ctkt.SOLUONGTON -= CTSP[i].SOLUONG
+                    ctkt.SOLUONGDABAN += CTSP[i].SOLUONG
+                    await ctkt.save()
+                }
+
+
                 return { donhang, ct }
 
             })
