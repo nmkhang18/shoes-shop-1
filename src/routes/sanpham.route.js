@@ -8,10 +8,13 @@ router.get('/', controller.getAll)
 router.get('/:id', controller.getById)
 
 router.put('/:id', dangnhapadmin, controller.editById)
-router.put('/disable/:id', dangnhapadmin, controller.disableById)
+// router.put('/disable/:id', dangnhapadmin, controller.disableById)
 router.put('/delete/:id', dangnhapadmin, controller.deleteById)
 
 router.post('/', controller.add)
+
+router.get('/:id/:ms', controller.editMS)
+
 
 
 module.exports = router

@@ -276,9 +276,62 @@ class controller {
 
     }
     editById = async (req, res) => {
+        let { tensanpham, mota, gia } = req.body
+        if (!tensanpham || !mota || !gia) {
+            return res.json({
+                message: 'missing data'
+            })
+        }
+        try {
+            let result = await db.SANPHAM.findByPk(req.params.id)
+            if (!result) return res.json({
+                message: 'Not found'
+            })
 
+            result.TENSANPHAM = tensanpham
+            result.MOTA = mota
+            result.GIA = gia
+
+            await result.save()
+
+            return res.json({
+                message: 'Update successfull'
+            })
+        }
+        catch (error) {
+            return res.status(500).json({
+                status: 500,
+                message: 'Unsuccess',
+            });
+        }
     }
-    disableById = async (req, res) => {
+    editMS = async (req, res) => {
+
+        try {
+            let result = await db.CT_MAUSAC.findOne({
+                where: {
+                    IDSP: req.params.id,
+                    IDMS: req.params.ms
+                }
+            })
+            if (!result) return res.json({
+                message: 'Not found'
+            })
+            console.log(result);
+
+
+            await result.save()
+
+            return res.json({
+                message: 'Update successfull'
+            })
+        }
+        catch (error) {
+            return res.status(500).json({
+                status: 500,
+                message: 'Unsuccess',
+            });
+        }
 
     }
     deleteById = async (req, res) => {
