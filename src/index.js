@@ -55,6 +55,8 @@ app.use('/taikhoan', taikhoanRouter)
 app.use('/thongke', thongkeRouter)
 app.use('/banner', bannerRouter)
 app.use('/others', othersRouter)
+app.use('/thongbao', thongbaoRouter)
+
 
 
 

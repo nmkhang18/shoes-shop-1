@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
         },
         NOIDUNG: DataTypes.TEXT('long'),
-        HINHANH: DataTypes.STRING,
+        TIEUDE: DataTypes.STRING,
         TRANGTHAI: DataTypes.TINYINT
 
 

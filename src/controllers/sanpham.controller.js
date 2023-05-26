@@ -306,6 +306,20 @@ class controller {
         }
     }
     editMS = async (req, res) => {
+        let { them } = req.body
+        if (!them) {
+            return res.json({
+                message: 'missing data'
+            })
+        }
+        let ctkt = JSON.parse(req.body.CTKT)
+        ctkt = ctkt.map(result => {
+            result.IDSP = req.params.id
+            result.IDMS = req.params.ms
+            return result
+        })
+
+        console.log(ctkt);
 
         try {
             let result = await db.CT_MAUSAC.findOne({
@@ -319,6 +333,14 @@ class controller {
             })
             console.log(result);
 
+            if (req.files) {
+                let idDrive = await upload(res, req.files.file.data, req.params.ms)
+                // console.log(id);
+                const hinh = `https://drive.google.com/uc?export=view&id=${idDrive}`
+                result.HINHANH = hinh
+            }
+            result.THEM = req.body.them
+            await db.CT_KICHTHUOC.bulkUpdate(ctkt, { keys: ["IDSP", "IDMS", "IDKT"], fields: ["SOLUONGTON"] })
 
             await result.save()
 
@@ -327,6 +349,7 @@ class controller {
             })
         }
         catch (error) {
+            console.log(error.message);
             return res.status(500).json({
                 status: 500,
                 message: 'Unsuccess',

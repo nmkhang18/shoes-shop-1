@@ -13,7 +13,7 @@ router.put('/delete/:id', dangnhapadmin, controller.deleteById)
 
 router.post('/', controller.add)
 
-router.get('/:id/:ms', controller.editMS)
+router.put('/:id/:ms', controller.editMS)
 
 
 
