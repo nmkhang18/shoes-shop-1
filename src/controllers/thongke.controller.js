@@ -8,7 +8,7 @@ const { sequelize } = require('../models/index')
 class controller {
     getByMonth = async (req, res) => {
 
-        let result = await sequelize.query(`SELECT	CTDH."IDSP", CTSP."TENSANPHAM", sum((CTDH."sl" * CTSP."tonggia")) as doanhthu
+        let result = await sequelize.query(`SELECT	CTDH."IDSP", CTSP."TENSANPHAM", sum((CTDH."sl" * CTSP."tonggia")) as doanhthu, sum(CTDH."sl")
         FROM 	(SELECT "IDSP", "IDMS", COUNT("IDSP") AS SL
                 FROM PUBLIC."CT_DONHANG"
                 WHERE EXTRACT(MONTH FROM "createdAt") = ${req.params.month} AND EXTRACT(YEAR FROM "createdAt") = ${req.params.year}
@@ -26,7 +26,7 @@ class controller {
             type: Sequelize.QueryTypes.SELECT
         });
 
-        let result1 = await sequelize.query(`SELECT CTDH."IDSP", CTDH."IDMS", CTSP."MAU", (CTDH."sl" * CTSP."tonggia") as doanhthu FROM (SELECT "IDSP", "IDMS", COUNT("IDSP") AS SL FROM PUBLIC."CT_DONHANG" WHERE EXTRACT(MONTH FROM "createdAt") = ${req.params.month} AND EXTRACT(YEAR FROM "createdAt") = ${req.params.year} GROUP BY "IDSP", "IDMS") AS CTDH, (SELECT SP."IDSP", SP."TENSANPHAM", CTMS."MAU", CTMS."IDMS",(SP."GIA" + CTMS."THEM") AS TONGGIA FROM PUBLIC."SANPHAM" SP, (SELECT CT."IDSP", CT."IDMS", CT."THEM", MS."MAU" FROM PUBLIC."CT_MAUSAC" CT INNER JOIN PUBLIC."MAUSAC" MS ON CT."IDMS" = MS."IDMS") AS CTMS WHERE SP."IDSP" = CTMS."IDSP") AS CTSP WHERE CTDH."IDSP" = CTSP."IDSP" AND CTDH."IDMS" = CTSP."IDMS"`, {
+        let result1 = await sequelize.query(`SELECT CTDH."IDSP", CTDH."IDMS", CTSP."MAU", (CTDH."sl" * CTSP."tonggia") as doanhthu, CTDH."sl" FROM (SELECT "IDSP", "IDMS", COUNT("IDSP") AS SL FROM PUBLIC."CT_DONHANG" WHERE EXTRACT(MONTH FROM "createdAt") = ${req.params.month} AND EXTRACT(YEAR FROM "createdAt") = ${req.params.year} GROUP BY "IDSP", "IDMS") AS CTDH, (SELECT SP."IDSP", SP."TENSANPHAM", CTMS."MAU", CTMS."IDMS",(SP."GIA" + CTMS."THEM") AS TONGGIA FROM PUBLIC."SANPHAM" SP, (SELECT CT."IDSP", CT."IDMS", CT."THEM", MS."MAU" FROM PUBLIC."CT_MAUSAC" CT INNER JOIN PUBLIC."MAUSAC" MS ON CT."IDMS" = MS."IDMS") AS CTMS WHERE SP."IDSP" = CTMS."IDSP") AS CTSP WHERE CTDH."IDSP" = CTSP."IDSP" AND CTDH."IDMS" = CTSP."IDMS"`, {
             nest: true,
             type: Sequelize.QueryTypes.SELECT
         });
