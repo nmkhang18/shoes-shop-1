@@ -26,7 +26,8 @@ class controller {
                     where: {
                         TRANGTHAI: true,
                         IDNH: req.query.nhanhieu,
-                    }
+                    },
+                    order: [['createdAt', 'DESC']]
                 })
                 let countSL = await db.CT_KICHTHUOC.findAll({
                     attributes: [

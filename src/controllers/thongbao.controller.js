@@ -9,7 +9,8 @@ class controller {
                 attributes: ['TIEUDE', 'NOIDUNG', 'createdAt'],
                 where: {
                     TRANGTHAI: true
-                }
+                },
+                order: [['createdAt', 'DESC']]
             })
             return res.json({
                 result
