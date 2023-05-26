@@ -48,7 +48,7 @@ class controller {
         })
 
 
-        return res.json(result)
+        return res.json({ result })
     }
 }
 
