@@ -293,6 +293,7 @@ class controller {
             result.MOTA = mota
             result.GIA = gia
 
+
             await result.save()
 
             return res.json({
@@ -314,19 +315,20 @@ class controller {
             })
         }
         let ctkt = JSON.parse(req.body.CTKT)
-        ctkt = ctkt.map(result => {
-            result.IDSP = req.params.id
-            result.IDMS = req.params.ms
-            return result
-        })
-
-        console.log(ctkt);
+        // ctkt = ctkt.map(result => {
+        //     result.IDSP = req.params.id
+        //     result.IDMS = req.params.ms
+        //     return result
+        // })
+        const id = req.params.id
+        const ms = req.params.ms
+        console.log();
 
         try {
             let result = await db.CT_MAUSAC.findOne({
                 where: {
-                    IDSP: req.params.id,
-                    IDMS: req.params.ms
+                    IDSP: id,
+                    IDMS: ms
                 }
             })
             if (!result) return res.json({
@@ -341,8 +343,16 @@ class controller {
                 result.HINHANH = hinh
             }
             result.THEM = req.body.them
-            await db.CT_KICHTHUOC.bulkUpdate(ctkt, { keys: ["IDSP", "IDMS", "IDKT"], fields: ["SOLUONGTON"] })
-
+            let records2 = await sequelize.query(`update public."CT_KICHTHUOC" ctkt set "SOLUONGTON" = data_table."soluongton"
+                                                from
+                                                (select unnest(array[${id},${id},${id},${id},${id},${id}]) as IDSP,
+                                                        unnest(array[${ms},${ms},${ms},${ms},${ms},${ms}]) as IDMS,
+                                                        unnest(array[1,2,3,4,5,6]) as IDKT,
+                                                        unnest(array[${ctkt}]) as SOLUONGTON) as data_table
+                                                where ctkt."IDSP" = data_table."idsp" and ctkt."IDMS" = data_table."idms" and ctkt."IDKT" = data_table."idkt"`, {
+                nest: true,
+                type: Sequelize.QueryTypes.UPDATE
+            });
             await result.save()
 
             return res.json({
